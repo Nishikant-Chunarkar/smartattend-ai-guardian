@@ -14,16 +14,172 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      attendance: {
+        Row: {
+          class_id: string
+          created_at: string
+          device_info: Json | null
+          id: string
+          status: string
+          student_id: string
+          timestamp: string
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          device_info?: Json | null
+          id?: string
+          status?: string
+          student_id: string
+          timestamp?: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          device_info?: Json | null
+          id?: string
+          status?: string
+          student_id?: string
+          timestamp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      classes: {
+        Row: {
+          class_name: string
+          created_at: string
+          date: string
+          id: string
+          teacher_id: string
+          updated_at: string
+        }
+        Insert: {
+          class_name: string
+          created_at?: string
+          date?: string
+          id?: string
+          teacher_id: string
+          updated_at?: string
+        }
+        Update: {
+          class_name?: string
+          created_at?: string
+          date?: string
+          id?: string
+          teacher_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classes_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          device_id: string | null
+          email: string
+          id: string
+          name: string
+          role: Database["public"]["Enums"]["user_role"]
+          student_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          device_id?: string | null
+          email: string
+          id?: string
+          name: string
+          role: Database["public"]["Enums"]["user_role"]
+          student_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          device_id?: string | null
+          email?: string
+          id?: string
+          name?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          student_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      qr_logs: {
+        Row: {
+          class_id: string
+          created_at: string
+          expiry_time: string
+          generated_time: string
+          id: string
+          is_active: boolean
+          qr_code: string
+        }
+        Insert: {
+          class_id: string
+          created_at?: string
+          expiry_time: string
+          generated_time?: string
+          id?: string
+          is_active?: boolean
+          qr_code: string
+        }
+        Update: {
+          class_id?: string
+          created_at?: string
+          expiry_time?: string
+          generated_time?: string
+          id?: string
+          is_active?: boolean
+          qr_code?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "qr_logs_class_id_fkey"
+            columns: ["class_id"]
+            isOneToOne: false
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { user_uuid: string }
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
     }
     Enums: {
-      [_ in never]: never
+      user_role: "teacher" | "student"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +306,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["teacher", "student"],
+    },
   },
 } as const
